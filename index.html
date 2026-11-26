@@ -111,12 +111,20 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
 #lyrics p{font:700 22px/1.35 Syne,sans-serif;color:rgba(255,255,255,.28);margin:16px 6px;transition:.3s}
 #lyrics p.on{color:#fff;text-shadow:0 0 18px var(--artc,var(--c))}
 #lyrics .plain{font:500 16px/1.7 Manrope,sans-serif;color:var(--tx);text-align:left}
+.avbtn{width:34px;height:34px;border-radius:50%;border:1px solid var(--ln);background:var(--s1);color:var(--tx);font:800 14px Syne,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.avbtn svg{width:18px;height:18px}
+.avbtn.in{background:var(--g);color:#06060a;border:0;box-shadow:0 0 14px -2px var(--v)}
+.avbig{width:76px;height:76px;margin:6px auto 0;border-radius:50%;background:var(--g);color:#06060a;display:flex;align-items:center;justify-content:center;font:800 32px Syne,sans-serif;box-shadow:0 0 36px -6px var(--v)}
+.stats{display:flex;justify-content:space-around;margin:18px 0 8px}
+.stats div{text-align:center}.stats b{display:block;font:800 22px Syne,sans-serif}.stats span{font-size:12px;color:var(--dim)}
+.gbtn{width:100%;padding:13px;border-radius:14px;border:0;background:#fff;color:#111;font:700 15px Manrope,sans-serif;margin:12px 0 6px;cursor:pointer}
+.or{text-align:center;color:var(--dim);font-size:12px;margin:8px 0}
 </style>
 </head>
 <body>
 <header>
   <div class="brand"><span data-ic="sigil"></span><b>UTA</b><small>BY SHADE REIGN</small></div>
-  <button class="ib st" id="gear" data-ic="gear" title="Settings"></button>
+  <div style="display:flex;align-items:center;gap:6px"><button class="avbtn st" id="avatar" title="Profile"></button><button class="ib st" id="gear" data-ic="gear" title="Settings"></button></div>
 </header>
 <main>
   <section id="v-home" class="view on">
@@ -598,7 +606,13 @@ $("impgo").onclick=async()=>{
 };
 
 /* ---------- account & cloud sync (Firebase) ---------- */
-function updAccount(){const b=$("acc");if(b)b.textContent=fbUser?"Account: "+fbUser.email:"Sign in to sync"}
+const nameOf=u=>(u.displayName||(u.email||"").split("@")[0]||"You");
+function updAccount(){
+  const b=$("acc");if(b)b.textContent=fbUser?"Account: "+nameOf(fbUser):"Sign in to sync";
+  const a=$("avatar");if(!a)return;
+  a.classList.toggle("in",!!fbUser);
+  a.innerHTML=fbUser?esc(nameOf(fbUser).slice(0,1).toUpperCase()):'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>';
+}
 function mergeCloud(d){
   try{
     const cp=JSON.parse(d.pls||"[]"),ch=JSON.parse(d.hist||"[]"),map={};
@@ -619,18 +633,22 @@ window.onFbUser=async u=>{
   try{const d=await FB.load();if(d)mergeCloud(d);save();saveH();renderLib();renderHist()}
   catch(e){toast("Cloud sync is not set up yet (Firestore rules)")}
 };
-const ERR=c=>({"auth/invalid-credential":"Wrong email or password","auth/invalid-email":"That email looks wrong","auth/missing-password":"Type your password","auth/email-already-in-use":"This email already has an account. Tap Sign in","auth/weak-password":"Password must be at least 6 characters","auth/too-many-requests":"Too many tries. Wait a minute","auth/network-request-failed":"No internet","auth/operation-not-allowed":"Email login is not turned on in Firebase yet"}[c]||"Something went wrong ("+c+")");
+const ERR=c=>({"auth/invalid-credential":"Wrong email or password","auth/invalid-email":"That email looks wrong","auth/missing-password":"Type your password","auth/email-already-in-use":"This email already has an account. Tap Sign in","auth/weak-password":"Password must be at least 6 characters","auth/too-many-requests":"Too many tries. Wait a minute","auth/network-request-failed":"No internet","auth/operation-not-allowed":"This login method is not turned on in Firebase yet","auth/popup-closed-by-user":"Google login was closed","auth/cancelled-popup-request":"Google login was cancelled","auth/popup-blocked":"Popup blocked. Open UTA in Safari and try again","auth/unauthorized-domain":"This site is not authorized in Firebase","auth/operation-not-supported-in-this-environment":"Google login does not work in this mode. Use email instead"}[c]||"Something went wrong ("+c+")");
 function openAccount(){
   if(!window.FB)return toast("Login is still loading. Try again in a moment.");
   $("sheet").onclick=null;
   if(fbUser){
-    sheet('<div class="t">Account</div><div class="s" style="margin:8px 0 12px">'+esc(fbUser.email)+'</div><div class="s" style="white-space:normal;margin-bottom:14px">Your playlists and history sync to this account.</div><button class="btn red" id="so">Sign out</button>');
+    const nm=nameOf(fbUser),songs=new Set(pls.flatMap(p=>p.tracks.map(t=>t.id))).size;
+    sheet('<div style="text-align:center"><div class="avbig">'+esc(nm.slice(0,1).toUpperCase())+'</div><div class="t" style="white-space:normal;font-size:18px;margin-top:10px">'+esc(nm)+'</div><div class="s">'+esc(fbUser.email||"")+'</div></div><div class="stats"><div><b>'+pls.length+'</b><span>Playlists</span></div><div><b>'+songs+'</b><span>Saved songs</span></div><div><b>'+hist.length+'</b><span>Played</span></div></div><div class="s" style="white-space:normal;text-align:center;margin:6px 0 14px">Your playlists and history sync to this account.</div><div style="text-align:center"><button class="btn" id="sn">Sync now</button><button class="btn red" id="so">Sign out</button></div>');
+    $("sn").onclick=async()=>{try{const d=await FB.load();if(d)mergeCloud(d);save();saveH();renderLib();renderHist();toast("Synced")}catch(e){toast("Sync failed. Check the Firestore rules")}};
     $("so").onclick=async()=>{await FB.out();$("modal").classList.remove("on");toast("Signed out")};
     return;
   }
-  sheet('<div class="t">Sign in to UTA</div><div class="s" style="white-space:normal;margin:8px 0">Save your playlists and history online and use them on any device. You can skip this.</div><input id="em" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="password" placeholder="Password (6+ characters)" autocomplete="current-password"><div style="margin-top:8px"><button class="btn red" id="li">Sign in</button><button class="btn" id="su">Create account</button><button class="btn" id="fg">Forgot password</button></div><div id="ae" class="s" style="white-space:normal"></div>');
-  const run=f=>async()=>{$("ae").textContent="";try{await f($("em").value.trim(),$("pw").value);$("modal").classList.remove("on");toast("Signed in")}catch(e){$("ae").textContent=ERR(e.code||"")}};
+  sheet('<div class="t" style="font-size:18px">Welcome to UTA</div><div class="s" style="white-space:normal;margin:6px 0 4px">Sign in to keep your playlists and history on every device. You can skip this.</div><button class="gbtn" id="gg">Continue with Google</button><div class="or">or use email</div><input id="em" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="password" placeholder="Password (6+ characters)" autocomplete="current-password"><div style="margin-top:8px"><button class="btn red" id="li">Sign in</button><button class="btn" id="su">Create account</button></div><button class="btn" id="fg">Forgot password</button><div id="ae" class="s" style="white-space:normal"></div>');
+  const done=()=>{$("modal").classList.remove("on");toast("Signed in")};
+  const run=f=>async()=>{$("ae").textContent="";try{await f($("em").value.trim(),$("pw").value);done()}catch(e){$("ae").textContent=ERR(e.code||"")}};
   $("li").onclick=run(FB.signIn);$("su").onclick=run(FB.signUp);
+  $("gg").onclick=async()=>{$("ae").textContent="";try{await FB.google();done()}catch(e){$("ae").textContent=ERR(e.code||"")}};
   $("fg").onclick=async()=>{try{await FB.reset($("em").value.trim());$("ae").textContent="Password reset email sent. Check your inbox."}catch(e){$("ae").textContent=ERR(e.code||"")}};
 }
 
@@ -765,7 +783,7 @@ $("flike").onclick=()=>{
 };
 $("fadd").onclick=()=>pick(cur);
 setPlay(false);loadHome();
-$("acc").onclick=openAccount;$("lyr").onclick=toggleLyrics;updAccount();
+$("acc").onclick=$("avatar").onclick=openAccount;$("lyr").onclick=toggleLyrics;updAccount();
 if(FIRST)setTimeout(()=>{if(!fbUser&&window.FB)openAccount()},2500);
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
@@ -773,7 +791,7 @@ if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail,GoogleAuthProvider,signInWithPopup}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const app=initializeApp({apiKey:"AIzaSyDdCoQ6MvYkj-ZK4PB71aQGXERPFTp_MIY",authDomain:"uta-shadereign.firebaseapp.com",projectId:"uta-shadereign",storageBucket:"uta-shadereign.firebasestorage.app",messagingSenderId:"967600940193",appId:"1:967600940193:web:c0544adb75aaca652bbce0"});
 const auth=getAuth(app),db=getFirestore(app);
@@ -781,6 +799,7 @@ window.FB={
   signIn:(e,p)=>signInWithEmailAndPassword(auth,e,p),
   signUp:(e,p)=>createUserWithEmailAndPassword(auth,e,p),
   out:()=>signOut(auth),
+  google:()=>signInWithPopup(auth,new GoogleAuthProvider()),
   reset:e=>sendPasswordResetEmail(auth,e),
   load:async()=>{const s=await getDoc(doc(db,"users",auth.currentUser.uid));return s.exists()?s.data():null},
   save:d=>setDoc(doc(db,"users",auth.currentUser.uid),d)
