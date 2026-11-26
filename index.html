@@ -34,7 +34,9 @@ h3{font:700 12px Manrope,sans-serif;letter-spacing:.2em;text-transform:uppercase
 .sb{display:flex;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--ln);border-radius:18px;padding:0 18px;margin-top:8px;color:var(--dim);transition:.2s}
 .sb:focus-within{border-color:var(--v);box-shadow:0 0 0 3px rgba(166,107,255,.15),0 0 28px -6px var(--v)}
 .sb input{flex:1;background:none;border:0;outline:none;color:var(--tx);font:500 16px Manrope,sans-serif;padding:16px 0}
-.chips{display:flex;gap:8px;margin:14px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.cut .row:nth-child(n+6){display:none}
+.skr{height:66px;border-radius:14px;margin:4px 0;background:linear-gradient(90deg,var(--s1),var(--s2),var(--s1));background-size:200% 100%;animation:sh 1.3s infinite}
 .hs{overflow-x:auto;scrollbar-width:none}.hs::-webkit-scrollbar,.hrow::-webkit-scrollbar{display:none}
 .chip{flex:none;padding:8px 16px;border-radius:99px;border:1px solid var(--ln);background:var(--s1);color:var(--dim);font:600 13px Manrope,sans-serif;cursor:pointer;transition:.2s}
 .chip:hover{color:var(--tx);border-color:var(--v)}
@@ -52,7 +54,10 @@ h3{font:700 12px Manrope,sans-serif;letter-spacing:.2em;text-transform:uppercase
 .row{display:flex;align-items:center;gap:12px;padding:8px;border-radius:16px;transition:background .2s}
 .row:hover,.row:active{background:var(--s1)}
 .row img,.ph{width:50px;height:50px;border-radius:12px;object-fit:cover;background:var(--s1);flex:none}
-.row.artist img{border-radius:50%}
+.row.artist img,.row.artist .ph{border-radius:50%}
+.ph.av{display:flex;align-items:center;justify-content:center;font:800 18px Syne,sans-serif;color:#fff;background:linear-gradient(135deg,rgba(94,242,255,.25),rgba(166,107,255,.35))}
+.sk{flex:0 0 148px;aspect-ratio:1;border-radius:18px;background:linear-gradient(90deg,var(--s1),var(--s2),var(--s1));background-size:200% 100%;animation:sh 1.3s infinite}
+@keyframes sh{to{background-position:-200% 0}}
 .meta{flex:1;min-width:0;cursor:pointer}
 .t{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s{font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
@@ -76,10 +81,10 @@ h3{font:700 12px Manrope,sans-serif;letter-spacing:.2em;text-transform:uppercase
 nav{position:fixed;left:0;right:0;bottom:0;z-index:7;height:calc(62px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(7,7,11,.88);backdrop-filter:blur(18px);border-top:1px solid var(--ln);display:flex}
 nav button{flex:1;background:none;border:0;color:var(--dim);font:600 10px Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:.2s}
 nav button.on{color:#fff}nav button.on svg{color:var(--c);filter:drop-shadow(0 0 7px var(--c))}
-#full{position:fixed;inset:0;z-index:40;background:radial-gradient(90% 50% at 50% 0,rgba(166,107,255,.28),transparent 70%),radial-gradient(70% 40% at 90% 100%,rgba(94,242,255,.12),transparent 70%),#08080d;transform:translateY(102%);transition:transform .38s cubic-bezier(.2,.8,.2,1);overflow:auto;padding:calc(12px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom))}
+#full{position:fixed;inset:0;z-index:40;background:radial-gradient(90% 50% at 50% 0,var(--art,rgba(166,107,255,.28)),transparent 70%),radial-gradient(70% 40% at 90% 100%,rgba(94,242,255,.12),transparent 70%),#08080d;transform:translateY(102%);transition:transform .38s cubic-bezier(.2,.8,.2,1);overflow:auto;padding:calc(12px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom))}
 #full.open{transform:none}
 .fin{max-width:420px;margin:auto}
-#stage{position:relative;width:min(80vw,380px);aspect-ratio:1;border-radius:28px;overflow:hidden;margin:14px auto 26px;box-shadow:0 0 0 1px var(--ln),0 30px 90px -20px var(--v),0 0 60px -20px var(--c);background:var(--s1)}
+#stage{position:relative;width:min(80vw,380px);aspect-ratio:1;border-radius:28px;overflow:hidden;margin:14px auto 26px;box-shadow:0 0 0 1px var(--ln),0 30px 90px -20px var(--artc,var(--v)),0 0 60px -20px var(--c);background:var(--s1)}
 #fart{width:100%;height:100%;object-fit:cover}
 #ytw{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
 .vid #ytw{opacity:1}
@@ -99,6 +104,13 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
 #modal.on{display:flex}
 #sheet{background:#13131b;border:1px solid var(--ln);width:100%;max-width:560px;border-radius:26px 26px 0 0;padding:20px;max-height:75vh;overflow:auto}
 #sheet .opt{display:block;width:100%;text-align:left;padding:14px 6px;border:0;border-bottom:1px solid var(--ln);background:none;color:var(--tx);font:500 15px Manrope,sans-serif}
+#sheet input{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--ln);border-radius:12px;color:var(--tx);padding:13px;font:500 15px Manrope,sans-serif;margin:6px 0;outline:none}
+#sheet input:focus{border-color:var(--v)}
+#lyrics{display:none;position:relative;height:min(80vw,380px);max-width:380px;overflow:auto;margin:14px auto 26px;text-align:center;scrollbar-width:none}
+#lyrics::-webkit-scrollbar{display:none}
+#lyrics p{font:700 22px/1.35 Syne,sans-serif;color:rgba(255,255,255,.28);margin:16px 6px;transition:.3s}
+#lyrics p.on{color:#fff;text-shadow:0 0 18px var(--artc,var(--c))}
+#lyrics .plain{font:500 16px/1.7 Manrope,sans-serif;color:var(--tx);text-align:left}
 </style>
 </head>
 <body>
@@ -108,8 +120,9 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
 </header>
 <main>
   <section id="v-home" class="view on">
-    <h1 id="hi">Hello</h1><p class="sub">Free music. No ads.</p>
-    <div class="chips hs" id="moods" style="margin-top:18px"></div>
+    <h1 id="hi">Hello</h1>
+    <div class="chips" id="moods" style="margin-top:18px"></div>
+    <div id="home-hist"></div>
     <div id="home-rows"></div>
   </section>
   <section id="v-search" class="view">
@@ -131,7 +144,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
       <div class="rowb"><label class="btn">Upload CSV or TXT<input type="file" id="impf" accept=".csv,.txt" hidden></label><button class="btn red" id="impgo">Import</button></div>
       <div id="impp" class="s" style="white-space:normal"></div>
     </div>
-    <button class="btn" id="newpl">+ New playlist</button>
+    <button class="btn" id="acc">Sign in to sync</button><button class="btn" id="newpl">+ New playlist</button>
     <div id="lib-list" class="list"></div>
   </section>
   <section id="v-detail" class="view">
@@ -153,6 +166,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
 <div id="full"><div class="fin">
   <button class="ib" id="fclose" data-ic="down"></button>
   <div id="stage"><img id="fart" alt=""><div id="ytw"><div id="yt"></div></div></div>
+  <div id="lyrics"></div>
   <div class="ft"><div style="min-width:0"><div class="t" id="ft">Pick a song</div><div class="s" id="fa">SHADE REIGN</div></div>
     <div style="display:flex"><button class="ib st" id="flike" data-ic="heart"></button><button class="ib st" id="fadd" data-ic="plus"></button></div></div>
   <input type="range" id="fbar" min="0" max="100" value="0" step="0.1">
@@ -164,6 +178,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
     <button class="ib" id="fnext" data-ic="next"></button>
     <button class="ib st" id="frep" data-ic="rep"></button>
   </div>
+  <div style="text-align:center"><button class="btn" id="lyr">Lyrics</button></div>
 </div></div>
 
 <nav>
@@ -202,7 +217,20 @@ document.querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=I[e.dataset.ic]);
 
 /* ---------- storage ---------- */
 let pls=LS("sr_pl")||[{id:"liked",name:"Liked songs",tracks:[]}];
-const save=()=>LS("sr_pl",pls);
+const FIRST=!LS("sr_seen");LS("sr_seen",1);
+let fbUser=null,pushT=null,pushWarned=false;
+function cloudPush(){
+  if(!window.FB||!fbUser)return;
+  clearTimeout(pushT);
+  pushT=setTimeout(()=>{
+    let h=hist.slice(),a=JSON.stringify(pls),b=JSON.stringify(h);
+    while(a.length+b.length>900000&&h.length){h=h.slice(0,Math.floor(h.length/2));b=JSON.stringify(h)}
+    FB.save({pls:a,hist:b,t:Date.now()}).catch(()=>{if(!pushWarned){pushWarned=true;toast("Could not save online. Check Firestore setup.")}});
+  },1500);
+}
+const save=()=>{LS("sr_pl",pls);cloudPush()};
+let hist=LS("sr_hist")||[];const saveH=()=>{LS("sr_hist",hist);cloudPush()};
+function addHist(t){hist=[t,...hist.filter(x=>x.id!==t.id)].slice(0,100);saveH()}
 
 /* ---------- Audius (free full-length songs, no ads) ---------- */
 let host=null;
@@ -235,6 +263,20 @@ const PIPED=["https://pipedapi.kavin.rocks","https://pipedapi.adminforge.de","ht
 const INV=["https://inv.nadeko.net","https://yewtu.be","https://invidious.nerdvpn.de"];
 const INIT=/var ytInitialData\s*=\s*(\{[\s\S]*?\});<\/script>/;
 const walk=(o,f)=>{if(!o||typeof o!=="object")return;f(o);for(const k in o)walk(o[k],f)};
+function jsonp(u){return new Promise((res,rej)=>{
+  const cb="cb"+Math.random().toString(36).slice(2),sc=document.createElement("script");
+  const t=setTimeout(()=>{rej(0);sc.remove();delete window[cb]},8000);
+  window[cb]=d=>{clearTimeout(t);res(d);sc.remove();delete window[cb]};
+  sc.onerror=()=>{clearTimeout(t);rej(0)};
+  sc.src=u+(u.includes("?")?"&":"?")+"callback="+cb;document.head.appendChild(sc);
+})}
+const itunes=u=>getJSON(u,7000).catch(()=>jsonp(u));
+const lazyTracks=rs=>{const seen={},out=[];(rs||[]).forEach(r=>{
+  if(!r.trackId||!r.trackName)return;
+  const k=(r.trackName+"|"+r.artistName).toLowerCase();if(seen[k])return;seen[k]=1;
+  out.push({id:"l"+r.trackId,src:"l",title:r.trackName,artist:r.artistName,art:(r.artworkUrl100||"").replace("100x100","300x300"),dur:Math.round((r.trackTimeMillis||0)/1000),q:r.trackName+" "+r.artistName});
+});return out};
+const cacheGet=async(k,fn,ttl=216e5)=>{const c=LS("sr_c_"+k);if(c&&Date.now()-c.t<ttl&&c.v&&c.v.length)return c.v;const v=await fn();LS("sr_c_"+k,{t:Date.now(),v});return v};
 /* every source is tried at the same time; the first good answer wins */
 function ytSearch(q){
   const src=[
@@ -256,12 +298,13 @@ function show(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
   if(v==="lib")renderLib();
+  if(v==="home")renderHist();
   scrollTo(0,0);
 }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
 
 /* ---------- rendering ---------- */
-const tag=t=>t.src==="y"?"YouTube (screen on)":"Audius (background OK)";
+const tag=t=>t.src==="a"?"Audius (background OK)":"YouTube (screen on)";
 function trackRows(list,el,opts){
   el._l=list;el._o=opts||{};el.onclick=null;el.className="list";
   if(!list.length){el.innerHTML='<div class="msg">Nothing here yet.</div>';return}
@@ -329,22 +372,34 @@ async function openOnline(p){
 }
 
 /* ---------- home & search ---------- */
+function renderHist(){
+  const b=$("home-hist");
+  if(!hist.length){b.innerHTML="";return}
+  b.innerHTML='<h3>Recently played</h3><div class="list" id="hist-list"></div><button class="btn" onclick="openPl(\'__hist\')">See all history</button>';
+  const el=$("hist-list");trackRows(hist.slice(0,30),el);el.classList.add("cut");
+}
 let HOME_FIRST=[];
-const ROWS=[["Trending now","/tracks/trending?limit=20"],["Underground gems","/tracks/trending/underground?limit=20"],["Lo-Fi & chill","/tracks/trending?genre=Lo-Fi&limit=20"],["Hip-Hop & Rap","/tracks/trending?genre="+enc("Hip-Hop/Rap")+"&limit=20"],["Electronic","/tracks/trending?genre=Electronic&limit=20"],["Pop","/tracks/trending?genre=Pop&limit=20"],["Rock","/tracks/trending?genre=Rock&limit=20"],["Ambient","/tracks/trending?genre=Ambient&limit=20"],["Soundtrack","/tracks/trending?genre=Soundtrack&limit=20"],["R&B / Soul","/tracks/trending?genre="+enc("R&B/Soul")+"&limit=20"]];
+const AU=(t,p)=>({t,load:()=>api(p).then(d=>d.map(norm))});
+const IT=(t,term)=>({t,load:()=>cacheGet("it:"+term,()=>itunes("https://itunes.apple.com/search?entity=song&limit=25&country=IN&term="+enc(term)).then(d=>lazyTracks(d.results)))});
+const CH=(t,cc)=>({t,load:()=>cacheGet("ch:"+cc,()=>getJSON("https://rss.applemarketingtools.com/api/v2/"+cc+"/music/most-played/50/songs.json",8000)
+  .then(d=>d.feed.results.map(r=>({id:"l"+r.id,src:"l",title:r.name,artist:r.artistName,art:(r.artworkUrl100||"").replace("100x100","300x300"),dur:0,q:r.name+" "+r.artistName})))
+  .catch(()=>itunes("https://itunes.apple.com/search?entity=song&limit=25&country="+cc+"&term=top%20hits").then(d=>lazyTracks(d.results))))});
+const ROWS=[CH("Top songs India","in"),CH("Top songs worldwide","us"),IT("Bollywood hits","bollywood hits"),IT("Arijit Singh","arijit singh"),IT("Punjabi hits","punjabi hits"),AU("Trending on Audius","/tracks/trending?limit=20"),IT("Romantic Hindi","hindi romantic songs"),IT("Desi hip-hop","desi hip hop"),IT("Phonk & drift","phonk"),IT("Anime & OST","anime opening"),AU("Lo-Fi & chill","/tracks/trending?genre=Lo-Fi&limit=20"),IT("Workout","workout motivation"),IT("Old Hindi classics","old hindi songs"),AU("Underground gems","/tracks/trending/underground?limit=20"),AU("Electronic","/tracks/trending?genre=Electronic&limit=20"),AU("Ambient","/tracks/trending?genre=Ambient&limit=20")];
 const MOODS=["Bollywood","Punjabi","Phonk","Lofi","Anime OST","Synthwave","Gym","Arijit Singh","The Weeknd","Old Hindi"];
 function goSearch(q){kind="songs";document.querySelectorAll(".chip[data-k]").forEach(x=>x.classList.toggle("on",x.dataset.k==="songs"));$("q").value=q;show("search");runSearch()}
 function loadHome(){
   const h=new Date().getHours();
-  $("hi").textContent=h<12?"Good morning":h<18?"Good afternoon":"Good evening";
+  $("hi").textContent=FIRST?(h<12?"Good morning":h<18?"Good afternoon":"Good evening"):"GREETINGS";
+  renderHist();
   $("moods").innerHTML=MOODS.map(m=>`<button class="chip" data-m="${esc(m)}">${esc(m)}</button>`).join("");
   $("moods").onclick=e=>{const b=e.target.closest("[data-m]");if(b)goSearch(b.dataset.m)};
-  const box=$("home-rows");box.innerHTML="";
-  ROWS.forEach(([t,path],i)=>{
+  const box=$("home-rows");box.innerHTML="";HOME_FIRST=[];
+  ROWS.forEach((row,i)=>{
     const sec=document.createElement("div");
-    sec.innerHTML=`<h3>${esc(t)}</h3><div class="list hrow"><div class="msg">Loading…</div></div>`;box.appendChild(sec);
+    sec.innerHTML=`<h3>${esc(row.t)}</h3><div class="list">${'<div class="skr"></div>'.repeat(4)}</div>`;box.appendChild(sec);
     const el=sec.querySelector(".list");
-    api(path).then(d=>{const l=d.map(norm);if(!l.length)throw 0;if(!HOME_FIRST.length)HOME_FIRST=l;cardGrid(l,el,"hrow")})
-      .catch(()=>{if(i===0)el.innerHTML='<div class="msg">Could not reach the music server. <button class="btn" onclick="loadHome()">Try again</button></div>';else sec.remove()});
+    new Promise(r=>setTimeout(r,i*300)).then(()=>row.load()).then(l=>{if(!l||!l.length)throw 0;if(!HOME_FIRST.length)HOME_FIRST=l;trackRows(l,el);el.classList.add("cut");const mb=document.createElement("button");mb.className="btn";mb.textContent="Show more";mb.onclick=()=>{const c=el.classList.toggle("cut");mb.textContent=c?"Show more":"Show less"};sec.appendChild(mb)})
+      .catch(()=>{if(i===0&&!HOME_FIRST.length&&!box.querySelector(".card"))el.innerHTML='<div class="msg">Could not load songs. Check your internet. <button class="btn" onclick="loadHome()">Try again</button></div>';else sec.remove()});
   });
 }
 let kind="songs",deb;
@@ -358,30 +413,60 @@ async function runSearch(){
   el.className="list";el.innerHTML='<div class="msg">Searching…</div>';
   try{
     if(kind==="songs"){
-      let A=[],Y=[];
-      const draw=()=>{if(q!==$("q").value.trim())return;const out=[];for(let i=0;i<Math.max(A.length,Y.length);i++){if(Y[i])out.push(Y[i]);if(A[i])out.push(A[i])}if(out.length)trackRows(out,el)};
+      let A=[],Y=[],T=[];
+      const draw=()=>{if(q!==$("q").value.trim())return;const out=[],n=Math.max(A.length,Y.length,T.length);for(let i=0;i<n;i++){if(T[i])out.push(T[i]);if(Y[i])out.push(Y[i]);if(A[i])out.push(A[i])}if(out.length)trackRows(out,el)};
       await Promise.all([
+        itunes("https://itunes.apple.com/search?entity=song&limit=25&country=IN&term="+enc(q)).then(d=>{T=lazyTracks(d.results);draw()}).catch(()=>{}),
         api("/tracks/search?query="+enc(q)+"&limit=15").then(d=>{A=d.map(norm);draw()}).catch(()=>{}),
         ytSearch(q).then(d=>{Y=d;draw()}).catch(()=>{})
       ]);
-      if(q===$("q").value.trim()&&!A.length&&!Y.length)el.innerHTML='<div class="msg">No songs found. Check your internet or try another name.</div>';
-    }
+      if(q===$("q").value.trim()&&!A.length&&!Y.length&&!T.length)el.innerHTML='<div class="msg">No songs found. Check your internet or try another name.</div>';
+    }else if(kind==="users"){await artistSearch(q,el)}
     else{
-      const d=await api("/"+kind+"/search?query="+enc(q)+"&limit=30");
+      const d=await api("/playlists/search?query="+enc(q)+"&limit=30");
       if(q!==$("q").value.trim())return;
-      peopleRows(d,el,kind==="users"?"artists":"playlists");
+      peopleRows(d,el,"playlists");
     }
   }catch(e){el.innerHTML='<div class="msg">Search failed. Check your internet and try again.</div>'}
+}
+
+async function artistSearch(q,el){
+  const [I_,A]=await Promise.allSettled([
+    itunes("https://itunes.apple.com/search?entity=musicArtist&limit=8&country=IN&term="+enc(q)),
+    api("/users/search?query="+enc(q)+"&limit=30")
+  ]);
+  if(q!==$("q").value.trim())return;
+  const list=[],seen={};
+  if(I_.value)I_.value.results.forEach(x=>{if(x.artistId&&!seen[x.artistId]){seen[x.artistId]=1;list.push({k:"it",id:x.artistId,name:x.artistName,sub:"Artist"+(x.primaryGenreName?" · "+x.primaryGenreName:"")+" · full catalog"})}});
+  if(A.value)A.value.filter(u=>(u.track_count||0)>=3).sort((a,b)=>(b.follower_count||0)-(a.follower_count||0)).slice(0,6)
+    .forEach(u=>list.push({k:"au",id:u.id,name:u.name,sub:"Audius artist · "+u.track_count+" tracks",img:u.profile_picture&&(u.profile_picture["150x150"]||u.profile_picture["480x480"])}));
+  if(!list.length){el._l=null;el.innerHTML='<div class="msg">No artists found. Try the Songs tab or another spelling.</div>';return}
+  el._l=null;
+  el.innerHTML=list.map((x,i)=>`<div class="row artist" data-i="${i}">${x.img?`<img src="${esc(x.img)}" loading="lazy" alt="">`:`<div class="ph av">${esc(x.name.slice(0,1).toUpperCase())}</div>`}<div class="meta"><div class="t">${esc(x.name)}</div><div class="s">${esc(x.sub)}</div></div></div>`).join("");
+  el.onclick=e=>{const r=e.target.closest(".row");if(!r)return;const x=list[+r.dataset.i];x.k==="it"?openItArtist(x):openArtist({id:x.id,name:x.name})};
+}
+async function openItArtist(x){
+  detail(x.name,[]);$("d-list").innerHTML='<div class="msg">Loading all songs…</div>';
+  try{
+    const d=await itunes("https://itunes.apple.com/lookup?id="+x.id+"&entity=song&limit=200&country=IN");
+    const l=lazyTracks((d.results||[]).filter(r=>r.wrapperType==="track"));
+    if(!l.length)throw 0;
+    detail(x.name,l);
+  }catch(e){$("d-list").innerHTML='<div class="msg">Could not load this artist. Check your internet and try again.</div>'}
 }
 
 /* ---------- library & playlists ---------- */
 function renderLib(){
   const el=$("lib-list");el._l=null;el.className="list";
-  el.innerHTML=pls.map(p=>`<div class="row" data-id="${esc(p.id)}">${p.tracks[0]&&p.tracks[0].art?`<img src="${esc(p.tracks[0].art)}" alt="">`:'<div class="ph"></div>'}
+  el.innerHTML=(hist.length?`<div class="row" data-id="__hist"><div class="ph av">&#8635;</div><div class="meta"><div class="t">Recently played</div><div class="s">${hist.length} songs</div></div></div>`:"")+pls.map(p=>`<div class="row" data-id="${esc(p.id)}">${p.tracks[0]&&p.tracks[0].art?`<img src="${esc(p.tracks[0].art)}" alt="">`:'<div class="ph"></div>'}
     <div class="meta"><div class="t">${esc(p.name)}</div><div class="s">${p.tracks.length} songs</div></div></div>`).join("");
   el.onclick=e=>{const r=e.target.closest(".row");if(r)openPl(r.dataset.id)};
 }
 function openPl(id){
+  if(id==="__hist"){
+    backTo="lib";detail("Recently played",hist,'<button class="btn" id="d-clr">Clear history</button>');backTo="lib";
+    $("d-clr").onclick=()=>{hist=[];saveH();show("lib")};return;
+  }
   const p=pls.find(x=>x.id===id);if(!p)return;
   backTo="lib";
   detail(p.name,p.tracks,p.id==="liked"?"":'<button class="btn" id="d-del">Delete</button>',{removeFrom:p.id});
@@ -404,9 +489,28 @@ function pick(t){
   };
 }
 $("gear").onclick=()=>{
-  sheet('<div class="t">About UTA</div><div class="s" style="white-space:normal;margin:8px 0 14px">Install: iPhone Safari, Share, Add to Home Screen. Android Chrome, menu, Install app. Desktop Chrome or Edge, install icon in the address bar.<br><br>Audius songs keep playing with the screen off. YouTube songs need the screen on.</div><button class="btn" id="wipe">Clear my library</button>');
+  sheet('<div class="t">About UTA</div><div class="s" style="white-space:normal;margin:8px 0 14px">Install: iPhone Safari, Share, Add to Home Screen. Android Chrome, menu, Install app. Desktop Chrome or Edge, install icon in the address bar.<br><br>Audius songs keep playing with the screen off. YouTube songs need the screen on.<br><br>Your playlists and history are saved on this phone, inside this browser or app only. Use Backup to keep a copy or move them.</div><button class="btn" id="ac2">Account</button><button class="btn" id="bk">Backup</button><button class="btn" id="rs">Restore</button><button class="btn" id="wipe">Clear my library</button>');
   $("sheet").onclick=null;
-  $("wipe").onclick=()=>{if(confirm("Delete all playlists and likes?")){pls=[{id:"liked",name:"Liked songs",tracks:[]}];save();$("modal").classList.remove("on");renderLib();toast("Library cleared")}};
+  $("ac2").onclick=openAccount;
+  const TA='width:100%;background:rgba(0,0,0,.4);color:#eceaf6;border:1px solid var(--ln);border-radius:12px;padding:10px;margin:8px 0';
+  $("bk").onclick=()=>{
+    const txt=JSON.stringify({pls,hist});
+    sheet('<div class="t">Backup</div><div class="s" style="white-space:normal;margin:8px 0">Tap Copy, then paste it in Notes or WhatsApp to yourself.</div><textarea id="bt" rows="6" style="'+TA+'"></textarea><button class="btn red" id="bc">Copy</button>');
+    $("bt").value=txt;
+    $("bc").onclick=()=>{$("bt").select();try{navigator.clipboard.writeText(txt).then(()=>toast("Copied"))}catch(e){document.execCommand("copy");toast("Copied")}};
+  };
+  $("rs").onclick=()=>{
+    sheet('<div class="t">Restore</div><div class="s" style="white-space:normal;margin:8px 0">Paste your backup text here.</div><textarea id="rt" rows="6" style="'+TA+'"></textarea><button class="btn red" id="rgo">Restore</button>');
+    $("rgo").onclick=()=>{
+      try{
+        const d=JSON.parse($("rt").value);if(!Array.isArray(d.pls))throw 0;
+        pls=d.pls;if(!pls.length||pls[0].id!=="liked")pls.unshift({id:"liked",name:"Liked songs",tracks:[]});
+        hist=Array.isArray(d.hist)?d.hist:[];save();saveH();
+        $("modal").classList.remove("on");renderLib();renderHist();toast("Restored");
+      }catch(e){toast("That backup text is not valid")}
+    };
+  };
+  $("wipe").onclick=()=>{if(confirm("Delete all playlists, likes and history?")){pls=[{id:"liked",name:"Liked songs",tracks:[]}];hist=[];save();saveH();$("modal").classList.remove("on");renderLib();renderHist();toast("Library cleared")}};
 };
 
 /* ---------- import (YouTube, Spotify, CSV, text) ---------- */
@@ -493,6 +597,77 @@ $("impgo").onclick=async()=>{
   $("imp").value="";$("impn").value="";P("Imported "+tracks.length+" songs into \""+name+"\".");renderLib();
 };
 
+/* ---------- account & cloud sync (Firebase) ---------- */
+function updAccount(){const b=$("acc");if(b)b.textContent=fbUser?"Account: "+fbUser.email:"Sign in to sync"}
+function mergeCloud(d){
+  try{
+    const cp=JSON.parse(d.pls||"[]"),ch=JSON.parse(d.hist||"[]"),map={};
+    [...cp,...pls].forEach(p=>{
+      if(!map[p.id])map[p.id]={id:p.id,name:p.name,tracks:[]};
+      (p.tracks||[]).forEach(t=>{if(!map[p.id].tracks.some(x=>x.id===t.id))map[p.id].tracks.push(t)});
+    });
+    const out=Object.values(map);
+    out.sort((a,b)=>(a.id==="liked"?0:1)-(b.id==="liked"?0:1));
+    if(!out.length||out[0].id!=="liked")out.unshift({id:"liked",name:"Liked songs",tracks:[]});
+    pls=out;
+    const seen={};hist=[...hist,...ch].filter(t=>t&&!seen[t.id]&&(seen[t.id]=1)).slice(0,100);
+  }catch(e){}
+}
+window.onFbUser=async u=>{
+  fbUser=u;updAccount();
+  if(!u)return;
+  try{const d=await FB.load();if(d)mergeCloud(d);save();saveH();renderLib();renderHist()}
+  catch(e){toast("Cloud sync is not set up yet (Firestore rules)")}
+};
+const ERR=c=>({"auth/invalid-credential":"Wrong email or password","auth/invalid-email":"That email looks wrong","auth/missing-password":"Type your password","auth/email-already-in-use":"This email already has an account. Tap Sign in","auth/weak-password":"Password must be at least 6 characters","auth/too-many-requests":"Too many tries. Wait a minute","auth/network-request-failed":"No internet","auth/operation-not-allowed":"Email login is not turned on in Firebase yet"}[c]||"Something went wrong ("+c+")");
+function openAccount(){
+  if(!window.FB)return toast("Login is still loading. Try again in a moment.");
+  $("sheet").onclick=null;
+  if(fbUser){
+    sheet('<div class="t">Account</div><div class="s" style="margin:8px 0 12px">'+esc(fbUser.email)+'</div><div class="s" style="white-space:normal;margin-bottom:14px">Your playlists and history sync to this account.</div><button class="btn red" id="so">Sign out</button>');
+    $("so").onclick=async()=>{await FB.out();$("modal").classList.remove("on");toast("Signed out")};
+    return;
+  }
+  sheet('<div class="t">Sign in to UTA</div><div class="s" style="white-space:normal;margin:8px 0">Save your playlists and history online and use them on any device. You can skip this.</div><input id="em" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="password" placeholder="Password (6+ characters)" autocomplete="current-password"><div style="margin-top:8px"><button class="btn red" id="li">Sign in</button><button class="btn" id="su">Create account</button><button class="btn" id="fg">Forgot password</button></div><div id="ae" class="s" style="white-space:normal"></div>');
+  const run=f=>async()=>{$("ae").textContent="";try{await f($("em").value.trim(),$("pw").value);$("modal").classList.remove("on");toast("Signed in")}catch(e){$("ae").textContent=ERR(e.code||"")}};
+  $("li").onclick=run(FB.signIn);$("su").onclick=run(FB.signUp);
+  $("fg").onclick=async()=>{try{await FB.reset($("em").value.trim());$("ae").textContent="Password reset email sent. Check your inbox."}catch(e){$("ae").textContent=ERR(e.code||"")}};
+}
+
+/* ---------- lyrics (LRCLIB) & colours from the artwork ---------- */
+let LY=[],lyOn=false,lyFor=null,lyIdx=-1;
+const cleanT=s=>String(s||"").replace(/\(.*?\)|\[.*?\]|official.*|lyric.*|video.*|audio.*/ig,"").replace(/\s+/g," ").trim();
+async function loadLyrics(c){
+  lyFor=c.id;LY=[];lyIdx=-1;$("lyrics").innerHTML='<div class="msg">Finding lyrics…</div>';
+  try{
+    const r=await getJSON("https://lrclib.net/api/search?track_name="+enc(cleanT(c.title))+"&artist_name="+enc(cleanT(c.artist)),8000);
+    if(lyFor!==c.id)return;
+    const hit=r.find(x=>x.syncedLyrics)||r.find(x=>x.plainLyrics);
+    if(!hit){$("lyrics").innerHTML='<div class="msg">No lyrics found for this song.</div>';return}
+    if(hit.syncedLyrics){
+      LY=hit.syncedLyrics.split("\n").map(l=>{const m=l.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*(.*)$/);return m?{t:+m[1]*60+ +m[2],x:m[3]}:null}).filter(Boolean);
+      $("lyrics").innerHTML=LY.map((l,i)=>'<p data-i="'+i+'">'+esc(l.x||"♪")+"</p>").join("");
+    }else $("lyrics").innerHTML='<p class="plain">'+esc(hit.plainLyrics).replace(/\n/g,"<br>")+"</p>";
+  }catch(e){if(lyFor===c.id)$("lyrics").innerHTML='<div class="msg">Could not load lyrics.</div>'}
+}
+function toggleLyrics(){
+  if(!cur)return toast("Play a song first");
+  lyOn=!lyOn;$("stage").style.display=lyOn?"none":"";$("lyrics").style.display=lyOn?"block":"none";$("lyr").classList.toggle("red",lyOn);
+  if(lyOn&&lyFor!==cur.id)loadLyrics(cur);
+}
+function tint(url){
+  const f=document.documentElement.style,reset=()=>{f.removeProperty("--art");f.removeProperty("--artc")};
+  if(!url)return reset();
+  const im=new Image();im.crossOrigin="anonymous";im.onerror=reset;
+  im.onload=()=>{try{
+    const c=document.createElement("canvas");c.width=c.height=12;const x=c.getContext("2d");x.drawImage(im,0,0,12,12);
+    const d=x.getImageData(0,0,12,12).data;let best=null,bs=-1;
+    for(let i=0;i<d.length;i+=4){const r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b),sc=(mx?(mx-mn)/mx:0)*mx;if(sc>bs){bs=sc;best=[r,g,b]}}
+    if(best){const [r,g,b]=best;f.setProperty("--art","rgba("+r+","+g+","+b+",.4)");f.setProperty("--artc","rgb("+Math.min(255,r+50)+","+Math.min(255,g+50)+","+Math.min(255,b+50)+")")}
+  }catch(e){reset()}};
+  im.src=url;
+}
+
 /* ---------- player (Audius audio + YouTube player) ---------- */
 const au=$("au");
 let Q=[],qi=-1,cur=null,shuf=false,rep=false,yt=null,ytReady=false,pend=null,fails=0,seeking=false;
@@ -504,23 +679,36 @@ function onYouTubeIframeAPIReady(){
   }});
 }
 function playList(l,i){Q=l.slice();qi=i;go()}
-function go(){
-  cur=Q[qi];if(!cur)return;
-  if(cur.src==="y"){
-    au.pause();$("stage").classList.add("vid");
-    if(ytReady)yt.loadVideoById(cur.vid);else pend=cur.vid;
-  }else{
-    if(ytReady)yt.stopVideo();pend=null;$("stage").classList.remove("vid");
-    au.src=(host||FALLBACK)+"/v1/tracks/"+cur.aid+"/stream?app_name="+APP;
-    au.play().catch(()=>{});
+const RES={};
+async function resolveLazy(t){
+  if(RES[t.id])return RES[t.id];
+  let r=null;
+  try{r=(await ytSearch(t.q))[0]}catch(e){}
+  if(!r)try{const a=await api("/tracks/search?query="+enc(t.q)+"&limit=1");if(a[0])r=norm(a[0])}catch(e){}
+  if(!r)return null;
+  return RES[t.id]=Object.assign({},r,{id:t.id,title:t.title,artist:t.artist,art:t.art||r.art,dur:t.dur||r.dur});
+}
+function startTrack(c){
+  if(c.src==="y"){au.pause();$("stage").classList.add("vid");if(ytReady)yt.loadVideoById(c.vid);else pend=c.vid}
+  else{if(ytReady)yt.stopVideo();pend=null;$("stage").classList.remove("vid");au.src=(host||FALLBACK)+"/v1/tracks/"+c.aid+"/stream?app_name="+APP;au.play().catch(()=>{})}
+}
+async function go(){
+  const t=Q[qi];if(!t)return;
+  cur=t;ui();addHist(t);
+  if(t.src==="l"){
+    toast("Finding song…");
+    const r=await resolveLazy(t);
+    if(cur!==t)return;
+    if(!r){fail();return}
+    cur=r;
   }
-  ui();
+  startTrack(cur);
 }
 function ui(){
   $("m-title").textContent=$("ft").textContent=cur.title;
   $("m-artist").textContent=$("fa").textContent=cur.artist;
   $("m-art").src=$("fart").src=cur.art||"";
-  updLike();setPlay(true);
+  updLike();setPlay(true);tint(cur.art);if(lyOn)loadLyrics(cur);
   document.querySelectorAll("[data-id]").forEach(r=>r.classList.toggle("now",r.dataset.id===cur.id));
   if("mediaSession" in navigator){
     navigator.mediaSession.metadata=new MediaMetadata({title:cur.title,artist:cur.artist,artwork:cur.art?[{src:cur.art}]:[]});
@@ -565,6 +753,10 @@ setInterval(()=>{
   d=d||0;const p=d?t/d*100:0;
   $("tc").textContent=fmt(t);$("td").textContent=fmt(d);$("mbar").style.width=p+"%";
   if(!seeking){fbar.value=p;fbar.style.setProperty("--p",p+"%")}
+  if(lyOn&&LY.length){
+    let k=-1;for(let i=0;i<LY.length;i++){if(LY[i].t<=t)k=i;else break}
+    if(k!==lyIdx){lyIdx=k;const L=$("lyrics"),ps=L.children;[...ps].forEach((e,i)=>e.classList.toggle("on",i===k));if(ps[k])L.scrollTo({top:ps[k].offsetTop-L.clientHeight/2+16,behavior:"smooth"})}
+  }
 },500);
 function updLike(){const l=cur&&pls[0].tracks.some(t=>t.id===cur.id);$("flike").classList.toggle("liked",!!l)}
 $("flike").onclick=()=>{
@@ -573,8 +765,27 @@ $("flike").onclick=()=>{
 };
 $("fadd").onclick=()=>pick(cur);
 setPlay(false);loadHome();
+$("acc").onclick=openAccount;$("lyr").onclick=toggleLyrics;updAccount();
+if(FIRST)setTimeout(()=>{if(!fbUser&&window.FB)openAccount()},2500);
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 <script src="https://www.youtube.com/iframe_api"></script>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyDdCoQ6MvYkj-ZK4PB71aQGXERPFTp_MIY",authDomain:"uta-shadereign.firebaseapp.com",projectId:"uta-shadereign",storageBucket:"uta-shadereign.firebasestorage.app",messagingSenderId:"967600940193",appId:"1:967600940193:web:c0544adb75aaca652bbce0"});
+const auth=getAuth(app),db=getFirestore(app);
+window.FB={
+  signIn:(e,p)=>signInWithEmailAndPassword(auth,e,p),
+  signUp:(e,p)=>createUserWithEmailAndPassword(auth,e,p),
+  out:()=>signOut(auth),
+  reset:e=>sendPasswordResetEmail(auth,e),
+  load:async()=>{const s=await getDoc(doc(db,"users",auth.currentUser.uid));return s.exists()?s.data():null},
+  save:d=>setDoc(doc(db,"users",auth.currentUser.uid),d)
+};
+onAuthStateChanged(auth,u=>{if(window.onFbUser)window.onFbUser(u)});
+</script>
 </body>
 </html>
