@@ -155,6 +155,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
 #ul svg{width:16px;height:16px;position:relative;z-index:1}
 #ul i{position:absolute;left:0;bottom:0;width:100%;height:0;background:rgba(94,242,255,.5)}
 #ul.hold i{height:100%;transition:height .9s linear}
+#lyrics input{width:100%;background:var(--inp);border:1px solid var(--ln);border-radius:12px;color:var(--tx);padding:13px;font:500 15px Manrope,sans-serif;outline:none;margin-top:8px}
 </style>
 </head>
 <body>
@@ -742,7 +743,7 @@ function stopViz(){cancelAnimationFrame(vraf);vraf=0}
 
 /* ---------- lyrics (LRCLIB) & colours from the artwork ---------- */
 let LY=[],lyOn=false,lyFor=null,lyIdx=-1;
-const cleanT=s=>String(s||"").replace(/\(.*?\)|\[.*?\]|official.*|lyric.*|video.*|audio.*/ig,"").replace(/\s+/g," ").trim();
+const cleanT=s=>String(s||"").replace(/\(.*?\)|\[.*?\]|\b(?:feat|ft)\b\.?.*|official.*|lyric.*|video.*|audio.*/ig,"").replace(/\s+/g," ").replace(/[\s\-\u2013\u2014|:]+$/,"").trim();
 let EN=LS("sr_en")!==0;
 function toggleEn(){EN=!EN;LS("sr_en",EN?1:0);$("lyrics").classList.toggle("noen",!EN);$("len").textContent="English: "+(EN?"on":"off")}
 async function translateLines(lines){
@@ -757,23 +758,62 @@ async function translateLines(lines){
   }
   return out;
 }
-async function loadLyrics(c){
+const norm2=s=>String(s||"").toLowerCase().replace(/[^a-z0-9\u00c0-\u024f\u0900-\u097f]+/g," ").trim();
+function lrOK(x,T,A,needArtist){
+  const xt=norm2(x.trackName),t=norm2(T);
+  if(!xt||!t||!(xt.includes(t)||t.includes(xt)))return false;
+  if(Math.min(xt.length,t.length)/Math.max(xt.length,t.length)<0.5)return false;
+  if(!needArtist||!A)return true;
+  const xa=norm2(x.artistName);
+  return norm2(A).split(" ").some(w=>w.length>=3&&xa.includes(w));
+}
+async function lrSearch(url,T,A,needArtist,dur){
+  const r=await getJSON(url,8000);
+  const ok=(Array.isArray(r)?r:[]).filter(x=>(x.syncedLyrics||x.plainLyrics)&&lrOK(x,T,A,needArtist));
+  if(!ok.length)throw 0;
+  const sc=x=>(x.syncedLyrics?0:1000)+(dur&&x.duration?Math.abs(x.duration-dur):0);
+  ok.sort((a,b)=>sc(a)-sc(b));return ok[0];
+}
+async function findLyrics(pairs,dur){
+  const base="https://lrclib.net/api/search?",jobs=[];
+  pairs.forEach(([T,A])=>{
+    if(!T)return;
+    if(A)jobs.push(lrSearch(base+"track_name="+enc(T)+"&artist_name="+enc(A),T,A,false,dur));
+    jobs.push(lrSearch(base+"q="+enc((T+" "+A).trim()),T,A,!!A,dur));
+    jobs.push(lrSearch(base+"q="+enc(T),T,A,!!A,dur));
+  });
+  try{return{hit:await Promise.any(jobs)}}catch(e){}
+  const ovh=pairs.filter(([T,A])=>T&&A).map(([T,A])=>getJSON("https://api.lyrics.ovh/v1/"+enc(A)+"/"+enc(T),9000).then(j=>{
+    const t=(j&&j.lyrics||"").replace(/\r/g,"").trim();if(t.length<40)throw 0;return{plain:t}}));
+  try{return await Promise.any(ovh)}catch(e){}
+  return null;
+}
+function noLyrics(c,pair){
+  $("lyrics").innerHTML='<div class="msg">No lyrics found for this song. Covers and remixes are often missing. Try the original song name:</div><input id="lq" placeholder="Song name - Artist" value="'+esc((pair[0]||"")+(pair[1]?" - "+pair[1]:""))+'"><button class="btn red" id="lgo" style="margin-top:8px">Search again</button>';
+  $("lgo").onclick=()=>{const v=$("lq").value.split(/\s+-\s+/);loadLyrics(c,[(v[0]||"").trim(),(v[1]||"").trim()])};
+}
+async function loadLyrics(c,manual){
   lyFor=c.id;LY=[];lyIdx=-1;$("lyrics").innerHTML='<div class="msg">Finding lyrics…</div>';
-  try{
-    const r=await getJSON("https://lrclib.net/api/search?track_name="+enc(cleanT(c.title))+"&artist_name="+enc(cleanT(c.artist)),8000);
-    if(lyFor!==c.id)return;
-    const hit=r.find(x=>x.syncedLyrics)||r.find(x=>x.plainLyrics);
-    if(!hit){$("lyrics").innerHTML='<div class="msg">No lyrics found for this song.</div>';return}
-    if(hit.syncedLyrics){
-      LY=hit.syncedLyrics.split("\n").map(l=>{const m=l.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*(.*)$/);return m?{t:+m[1]*60+ +m[2],x:m[3]}:null}).filter(Boolean);
-      $("lyrics").innerHTML=LY.map((l,i)=>'<p data-i="'+i+'"><span class="o">'+esc(l.x||"♪")+'</span><span class="e"></span></p>').join("");
-      translateLines(LY.map(l=>l.x||"♪")).then(tr=>{
-        if(!tr||lyFor!==c.id)return;
-        const ps=$("lyrics").children;
-        tr.forEach((x,i)=>{if(ps[i]&&x&&x!==(LY[i].x||"♪"))ps[i].querySelector(".e").textContent=x});
-      }).catch(()=>{});
-    }else $("lyrics").innerHTML='<p class="plain">'+esc(hit.plainLyrics).replace(/\n/g,"<br>")+"</p>";
-  }catch(e){if(lyFor===c.id)$("lyrics").innerHTML='<div class="msg">Could not load lyrics.</div>'}
+  let pairs;
+  if(manual)pairs=[manual];
+  else{
+    pairs=[[cleanT(c.title),cleanT(c.artist)]];
+    const m=String(c.title).match(/^\s*(.+?)\s+[-\u2013\u2014]\s+(.+?)\s*$/);
+    if(m)pairs.push([cleanT(m[2]),cleanT(m[1])]);
+  }
+  const res=await findLyrics(pairs,c.dur);
+  if(lyFor!==c.id)return;
+  if(!res){noLyrics(c,pairs[0]);return}
+  const hit=res.hit;
+  if(hit&&hit.syncedLyrics){
+    LY=hit.syncedLyrics.split("\n").map(l=>{const m=l.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*(.*)$/);return m?{t:+m[1]*60+ +m[2],x:m[3]}:null}).filter(Boolean);
+    $("lyrics").innerHTML=LY.map((l,i)=>'<p data-i="'+i+'"><span class="o">'+esc(l.x||"\u266a")+'</span><span class="e"></span></p>').join("");
+    translateLines(LY.map(l=>l.x||"\u266a")).then(tr=>{
+      if(!tr||lyFor!==c.id)return;
+      const ps=$("lyrics").children;
+      tr.forEach((x,i)=>{if(ps[i]&&x&&x!==(LY[i].x||"\u266a"))ps[i].querySelector(".e").textContent=x});
+    }).catch(()=>{});
+  }else $("lyrics").innerHTML='<p class="plain">'+esc((hit&&hit.plainLyrics)||res.plain).replace(/\n/g,"<br>")+"</p>";
 }
 function toggleLyrics(){
   if(!cur)return toast("Play a song first");
