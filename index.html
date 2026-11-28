@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>UTA</title>
+<title>UTA 歌</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
 <meta name="theme-color" content="#09090c">
+<meta name="description" content="UTA — Music, without the noise. Discover, listen, and keep your library by SHADE REIGN.">
+<meta name="color-scheme" content="dark light">
 <script>(function(){try{var t=JSON.parse(localStorage.getItem("sr_theme"))||"system";var l=t==="light"||(t==="system"&&matchMedia("(prefers-color-scheme: light)").matches);document.documentElement.dataset.theme=l?"light":"dark"}catch(e){}})()</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -19,6 +22,10 @@
 :root[data-theme="light"]{color-scheme:light;--bg:#f6f5fb;--s1:rgba(23,20,43,.05);--s2:rgba(23,20,43,.09);--ln:rgba(23,20,43,.12);--tx:#17142b;--dim:#6b6884;--c:#0891b2;--v:#7c3aed;--p:#db2777;--g:linear-gradient(120deg,#0891b2,#7c3aed 55%,#db2777);
 --nav:rgba(246,245,251,.92);--mini:rgba(255,255,255,.82);--full:#f4f2fb;--sheet:#ffffff;--inp:rgba(23,20,43,.06);--lyr:rgba(23,20,43,.3);--lyr2:rgba(23,20,43,.5);--track:rgba(23,20,43,.15);--toastbg:#17142b;--toastfg:#fff}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+button,[role="button"],input[type="range"]{touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--c);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@media(max-height:520px) and (orientation:landscape){#full .fin{padding-top:calc(8px + env(safe-area-inset-top));padding-bottom:calc(8px + env(safe-area-inset-bottom));gap:6px}#stage{max-height:42vh}}
 html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Manrope,-apple-system,"Segoe UI",sans-serif}
 body{background:radial-gradient(70% 38% at 8% 0,rgba(166,107,255,.17),transparent 70%),radial-gradient(60% 34% at 100% 6%,rgba(94,242,255,.1),transparent 70%),var(--bg);background-attachment:fixed}
 body::before{content:"SHADE REIGN";position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font:800 15vw/1 Syne,Manrope,sans-serif;letter-spacing:.12em;opacity:.028;pointer-events:none;text-align:center}
@@ -66,7 +73,7 @@ h3{font:700 12px Manrope,sans-serif;letter-spacing:.2em;text-transform:uppercase
 .t{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s{font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .now>.meta .t,.card.now .t{color:var(--c);text-shadow:0 0 14px rgba(94,242,255,.55)}
-.ib{background:none;border:0;color:var(--dim);padding:8px;cursor:pointer;border-radius:50%;transition:.2s}
+.ib{background:none;border:0;color:var(--dim);padding:8px;min-width:44px;min-height:44px;cursor:pointer;border-radius:50%;transition:.2s}
 .ib:hover{color:var(--tx)}
 .ib.on,.liked{color:var(--p);filter:drop-shadow(0 0 7px var(--p))}
 .liked svg{fill:currentColor}
@@ -156,16 +163,22 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
 #ul i{position:absolute;left:0;bottom:0;width:100%;height:0;background:rgba(94,242,255,.5)}
 #ul.hold i{height:100%;transition:height .9s linear}
 #lyrics input{width:100%;background:var(--inp);border:1px solid var(--ln);border-radius:12px;color:var(--tx);padding:13px;font:500 15px Manrope,sans-serif;outline:none;margin-top:8px}
+[lang="ja"]{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif}
+.brand .ja{font-size:15px;letter-spacing:0;font-weight:700;color:var(--c);text-shadow:0 0 12px var(--c);margin-left:-2px}
+body.locked{overflow:hidden;overscroll-behavior:none}
+#lock{-webkit-touch-callout:none}
+.lk-h{font:500 11px Manrope,sans-serif;margin-top:14px;opacity:.7}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand"><span data-ic="sigil"></span><b>UTA</b><small>BY SHADE REIGN</small></div>
+  <div class="brand"><span data-ic="sigil"></span><b>UTA</b><span class="ja" lang="ja">歌</span><small>BY SHADE REIGN</small></div>
   <div style="display:flex;align-items:center;gap:6px"><button class="avbtn st" id="avatar" title="Profile"></button><button class="ib st" id="gear" data-ic="gear" title="Settings"></button></div>
 </header>
 <main>
   <section id="v-home" class="view on">
     <h1 id="hi">Hello</h1>
+    <p class="sub"><span lang="ja">歌</span> &middot; <span lang="ja">うた</span> &middot; say &ldquo;oo-ta&rdquo;, it means song</p>
     <div class="chips" id="moods" style="margin-top:18px"></div>
     <div id="home-hist"></div>
     <div id="home-rows"></div>
@@ -231,7 +244,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
   <button class="st" data-v="search"><span data-ic="search"></span>Search</button>
   <button class="st" data-v="lib"><span data-ic="lib"></span>Library</button>
 </nav>
-<div id="lock"><div class="lk-in"><div class="lk-t">Locked</div><div class="lk-s" id="lk-s"></div></div><button id="ul" class="st" title="Hold to unlock"></button></div>
+<div id="lock"><div class="lk-in"><div class="lk-t">Locked</div><div class="lk-s" id="lk-s"></div><div class="lk-h">Hold the small circle to unlock</div></div><button id="ul" class="st" title="Hold to unlock"></button></div>
 <div id="toast"></div>
 <div id="modal"><div id="sheet"></div></div>
 <audio id="au" preload="none"></audio>
@@ -242,7 +255,7 @@ const $=id=>document.getElementById(id), enc=encodeURIComponent;
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt=s=>{s=Math.floor(s||0);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
 const dec=s=>{const t=document.createElement("textarea");t.innerHTML=s||"";return t.value};
-const LS=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}};
+const LS=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return null}};
 const I={
  play:'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
  pause:'<svg viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>',
@@ -260,10 +273,12 @@ const I={
  rep:'<svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/></svg>',
  sigil:'<svg viewBox="0 0 200 300"><path d="M100 16v268M64 50l36 36 36-36M100 86l44 54-44 54-44-54zM100 164l36 48-36 48-36-48z" fill="none" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 };
-document.querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=I[e.dataset.ic]);
+document.querySelectorAll("[data-ic]").forEach(e=>{e.innerHTML=I[e.dataset.ic];if(!e.getAttribute("aria-label"))e.setAttribute("aria-label",({play:"Play or pause",pause:"Pause",next:"Next track",prev:"Previous track",heart:"Like song",plus:"Add to playlist",search:"Search",home:"Home",lib:"Library",gear:"Settings",down:"Close player",lock:"Lock player",shuf:"Shuffle",rep:"Repeat"})[e.dataset.ic]||e.dataset.ic);});
 
 /* ---------- storage ---------- */
 let pls=LS("sr_pl")||[{id:"liked",name:"Liked songs",tracks:[]}];
+function likedPL(){let p=pls.find(x=>x&&x.id==="liked");if(!p){p={id:"liked",name:"Liked songs",tracks:[]};pls.unshift(p)}if(!Array.isArray(p.tracks))p.tracks=[];return p;}
+pls=Array.isArray(pls)?pls.filter(p=>p&&typeof p.id==="string"&&Array.isArray(p.tracks)):[];likedPL();
 const FIRST=!LS("sr_seen");LS("sr_seen",1);
 let fbUser=null,pushT=null,pushWarned=false;
 function cloudPush(){
@@ -271,12 +286,13 @@ function cloudPush(){
   clearTimeout(pushT);
   pushT=setTimeout(()=>{
     let h=hist.slice(),a=JSON.stringify(pls),b=JSON.stringify(h);
-    while(a.length+b.length>900000&&h.length){h=h.slice(0,Math.floor(h.length/2));b=JSON.stringify(h)}
+    while(a.length+b.length>850000&&h.length){h=h.slice(0,Math.floor(h.length/2));b=JSON.stringify(h)}
+    if(a.length+b.length>850000){toast("Library too large for current cloud sync. Export a backup first.");return}
     FB.save({pls:a,hist:b,t:Date.now()}).catch(()=>{if(!pushWarned){pushWarned=true;toast("Could not save online. Check Firestore setup.")}});
   },1500);
 }
-const save=()=>{LS("sr_pl",pls);cloudPush()};
-let hist=LS("sr_hist")||[];const saveH=()=>{LS("sr_hist",hist);cloudPush()};
+const save=()=>{try{if(!LS("sr_pl",pls))toast("Could not save locally. Storage may be full.");}catch(e){toast("Local save failed; export a backup.")}cloudPush()};
+let hist=LS("sr_hist")||[];if(!Array.isArray(hist))hist=[];const saveH=()=>{LS("sr_hist",hist);cloudPush()};
 function addHist(t){hist=[t,...hist.filter(x=>x.id!==t.id)].slice(0,100);saveH()}
 
 /* ---------- Audius (free full-length songs, no ads) ---------- */
@@ -325,23 +341,35 @@ const lazyTracks=rs=>{const seen={},out=[];(rs||[]).forEach(r=>{
 });return out};
 const cacheGet=async(k,fn,ttl=216e5)=>{const c=LS("sr_c_"+k);if(c&&Date.now()-c.t<ttl&&c.v&&c.v.length)return c.v;const v=await fn();LS("sr_c_"+k,{t:Date.now(),v});return v};
 /* every source is tried at the same time; the first good answer wins */
-function ytSearch(q){
-  const src=[
+const durOf=x=>{if(!x)return 0;return String(x).split(":").map(Number).reduce((a,b)=>a*60+b,0)||0};
+function ytSources(q){
+  return [
     ...PIPED.map(b=>getJSON(b+"/search?q="+enc(q)+"&filter=music_songs").then(j=>j.items.filter(s=>pv(s.url)).map(s=>ytTrack(pv(s.url),s.title,s.uploaderName,s.duration)))),
     ...INV.map(b=>getJSON(b+"/api/v1/search?type=video&q="+enc(q)).then(j=>j.filter(v=>v.videoId).map(v=>ytTrack(v.videoId,v.title,v.author,v.lengthSeconds)))),
     viaProxy("https://www.youtube.com/results?search_query="+enc(q)+"&sp=EgIQAQ%3D%3D",t=>INIT.test(t)).then(t=>{
       const out=[],seen={};
-      walk(JSON.parse(t.match(INIT)[1]),o=>{const v=o.videoRenderer;if(v&&v.videoId&&!seen[v.videoId]){seen[v.videoId]=1;out.push(ytTrack(v.videoId,(v.title.runs||[{}])[0].text||"",v.ownerText&&v.ownerText.runs&&v.ownerText.runs[0].text,0))}});
+      walk(JSON.parse(t.match(INIT)[1]),o=>{const v=o.videoRenderer;if(v&&v.videoId&&!seen[v.videoId]){seen[v.videoId]=1;out.push(ytTrack(v.videoId,(v.title.runs||[{}])[0].text||"",v.ownerText&&v.ownerText.runs&&v.ownerText.runs[0].text,durOf(v.lengthText&&v.lengthText.simpleText)))}});
       return out;
     })
   ];
-  return Promise.any(src.map(p=>p.then(x=>{if(!x.length)throw 0;return x})));
+}
+function ytSearch(q){return Promise.any(ytSources(q).map(p=>p.then(x=>{if(!x.length)throw 0;return x})))}
+/* waits for the first good answer, then a little longer, and merges what every source returned */
+function ytSearchAll(q,grace){
+  const src=ytSources(q);
+  return new Promise(res=>{
+    const all=[];let done=0,timer=null,fin=false;
+    const cap=setTimeout(()=>end(),9000);
+    const end=()=>{if(fin)return;fin=true;clearTimeout(timer);clearTimeout(cap);res(all)};
+    src.forEach(p=>p.then(x=>{if(x&&x.length){all.push(...x);if(!timer)timer=setTimeout(end,grace)}}).catch(()=>{}).then(()=>{if(++done===src.length)end()}));
+  });
 }
 
 /* ---------- toast, nav ---------- */
 let tt;
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2400)}
 function show(v){
+  document.querySelectorAll(".typing").forEach(el=>{clearInterval(el._t);el.classList.remove("typing")});
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="v-"+v));
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
   if(v==="lib")renderLib();
@@ -349,6 +377,7 @@ function show(v){
   scrollTo(0,0);
 }
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+const launchView=new URLSearchParams(location.search).get("view");if(launchView==="search")show("search");else if(launchView==="library")show("lib");
 
 /* ---------- rendering ---------- */
 const tag=t=>t.src==="a"?"Audius (background OK)":t.src==="p"?"30s preview (background OK)":"YouTube (screen on)";
@@ -540,7 +569,7 @@ function pick(t){
   };
 }
 $("gear").onclick=()=>{
-  sheet('<div class="t" style="font:800 20px Syne,sans-serif">About UTA</div><div class="s" style="white-space:normal;margin:8px 0 16px;line-height:1.65">UTA is a good music player. The name means "song" in Japanese. It is made to feel calm and a little neon: a spinning disc for every song, lyrics that follow along with an English translation, one search across many places, and playlists and history that travel with your account. Made by SHADE REIGN.</div><div class="t">Player style</div><div style="margin:8px 0 2px"><button class="btn" id="m1">Spinning disc</button><button class="btn" id="m2">Video</button></div><div class="s" style="white-space:normal;margin-bottom:16px">Disc hides the video, which usually uses less data. Video shows the music video.</div><div class="t">Theme</div><div style="margin:8px 0 16px"><button class="btn" id="t1">System</button><button class="btn" id="t2">Dark</button><button class="btn" id="t3">Light</button></div><button class="btn" id="ac2">Account</button><button class="btn" id="bk">Backup</button><button class="btn" id="rs">Restore</button><button class="btn" id="wipe">Clear my library</button>');
+  sheet('<div class="t" style="font:800 20px Syne,sans-serif">About UTA</div><div class="s" style="white-space:normal;margin:8px 0 16px;line-height:1.65">UTA (歌, say "oo-ta") means "song" in Japanese. Music, without the noise. UTA is your space to discover, listen, and keep your music. It is made to feel calm and a little neon: a spinning disc for every song, lyrics that follow along with an English translation, one search across many places, and playlists and history that travel with your account. Made by SHADE REIGN. Search and playback may use third-party services; library data stays on this device unless you sign in to sync.</div><div class="t">Pocket lock</div><div class="s" style="white-space:normal;margin:6px 0 16px">The lock icon in the player blocks every touch inside UTA. Swipes that belong to the phone (home, app switcher, notifications) can only be blocked by the phone itself: iPhone Guided Access, or Android Screen pinning.</div><div class="t">Player style</div><div style="margin:8px 0 2px"><button class="btn" id="m1">Spinning disc</button><button class="btn" id="m2">Video</button></div><div class="s" style="white-space:normal;margin-bottom:16px">Disc hides the video, which usually uses less data. Video shows the music video.</div><div class="t">Theme</div><div style="margin:8px 0 16px"><button class="btn" id="t1">System</button><button class="btn" id="t2">Dark</button><button class="btn" id="t3">Light</button></div><button class="btn" id="ac2">Account</button><button class="btn" id="bk">Backup</button><button class="btn" id="rs">Restore</button><button class="btn" id="wipe">Clear my library</button>');
   $("sheet").onclick=null;
   const paint=()=>{$("m1").classList.toggle("red",MODE==="disc");$("m2").classList.toggle("red",MODE==="video")};paint();
   $("m1").onclick=()=>{setMode("disc");paint()};$("m2").onclick=()=>{setMode("video");paint()};
@@ -549,18 +578,20 @@ $("gear").onclick=()=>{
   $("ac2").onclick=openAccount;
   const TA='width:100%;background:var(--inp);color:var(--tx);border:1px solid var(--ln);border-radius:12px;padding:10px;margin:8px 0';
   $("bk").onclick=()=>{
-    const txt=JSON.stringify({pls,hist});
-    sheet('<div class="t">Backup</div><div class="s" style="white-space:normal;margin:8px 0">Tap Copy, then paste it in Notes or WhatsApp to yourself.</div><textarea id="bt" rows="6" style="'+TA+'"></textarea><button class="btn red" id="bc">Copy</button>');
+    const txt=JSON.stringify({app:"UTA",version:2,backupDate:new Date().toISOString(),pls,hist});
+    sheet('<div class="t">Backup</div><div class="s" style="white-space:normal;margin:8px 0">Tap Copy, then paste it in Notes or WhatsApp to yourself.</div><textarea id="bt" rows="6" style="'+TA+'"></textarea><button class="btn red" id="bc">Copy</button><button class="btn" id="bd">Download JSON</button>');
     $("bt").value=txt;
-    $("bc").onclick=()=>{$("bt").select();try{navigator.clipboard.writeText(txt).then(()=>toast("Copied"))}catch(e){document.execCommand("copy");toast("Copied")}};
+    $("bc").onclick=()=>{$("bt").select();try{navigator.clipboard.writeText(txt).then(()=>toast("Copied")).catch(()=>{document.execCommand("copy");toast("Copied")})}catch(e){document.execCommand("copy");toast("Copied")}};
+    $("bd").onclick=()=>{const blob=new Blob([txt],{type:"application/json"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="UTA-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);toast("Backup file downloaded")};
   };
   $("rs").onclick=()=>{
     sheet('<div class="t">Restore</div><div class="s" style="white-space:normal;margin:8px 0">Paste your backup text here.</div><textarea id="rt" rows="6" style="'+TA+'"></textarea><button class="btn red" id="rgo">Restore</button>');
     $("rgo").onclick=()=>{
       try{
-        const d=JSON.parse($("rt").value);if(!Array.isArray(d.pls))throw 0;
-        pls=d.pls;if(!pls.length||pls[0].id!=="liked")pls.unshift({id:"liked",name:"Liked songs",tracks:[]});
-        hist=Array.isArray(d.hist)?d.hist:[];save();saveH();
+        const d=JSON.parse($("rt").value);if(!Array.isArray(d.pls)||d.pls.length>500)throw 0;
+        const incoming=d.pls.filter(p=>p&&typeof p.id==="string"&&typeof p.name==="string"&&Array.isArray(p.tracks)).map(p=>({id:p.id,name:p.name.slice(0,120),tracks:p.tracks.filter(t=>t&&typeof t.id==="string"&&typeof t.title==="string").slice(0,5000)}));
+        const old=pls;pls=incoming;likedPL();if(!pls.some(p=>p.id==="liked"))pls.unshift({id:"liked",name:"Liked songs",tracks:[]});
+        hist=Array.isArray(d.hist)?d.hist.filter(t=>t&&typeof t.id==="string").slice(0,100):[];save();saveH();
         $("modal").classList.remove("on");renderLib();renderHist();toast("Restored");
       }catch(e){toast("That backup text is not valid")}
     };
@@ -614,14 +645,22 @@ async function spotifyList(kind,id){
   const e=JSON.parse(m[1]).props.pageProps.state.data.entity;
   return{name:e.name||e.title||"Spotify playlist",lines:(e.trackList||[]).map(t=>t.title+" - "+(t.subtitle||""))};
 }
-const csvRow=l=>{const o=[];l.replace(/("([^"]|"")*"|[^,]*)(,|$)/g,(m,a)=>{o.push(a.replace(/^"|"$/g,"").replace(/""/g,'"'));return""});return o};
+function parseCSV(text){
+  const rows=[];let row=[],field="",quoted=false;
+  text=String(text||"").replace(/^\uFEFF/,"");
+  for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];
+    if(quoted){if(c==='"'&&n==='"'){field+='"';i++}else if(c==='"')quoted=false;else field+=c}
+    else if(c==='"'&&field==="")quoted=true;
+    else if(c===","){row.push(field);field=""}
+    else if(c==="\n"||c==="\r"){if(c==="\r"&&n==="\n")i++;row.push(field);field="";if(row.some(x=>x.trim()))rows.push(row);row=[]}
+    else field+=c;
+  }row.push(field);if(row.some(x=>x.trim()))rows.push(row);return rows;
+}
 function parseLines(t){
-  const L=t.split(/\r?\n/).filter(x=>x.trim());
-  if(L.length&&/track name/i.test(L[0])){
-    const h=csvRow(L[0]).map(x=>x.toLowerCase()),ti=h.findIndex(x=>x.startsWith("track name")),ai=h.findIndex(x=>x.startsWith("artist name"));
-    return L.slice(1).map(l=>{const c=csvRow(l);return(c[ti]||"")+" - "+((c[ai]||"").split(";")[0])});
-  }
-  return L.map(l=>l.replace(/^\d+[.)]\s*/,"").trim());
+  const rows=parseCSV(t);if(!rows.length)return[];
+  const h=rows[0].map(x=>x.trim().toLowerCase()),ti=h.findIndex(x=>/^(track name|track|song|title)$/.test(x)),ai=h.findIndex(x=>/^(artist name|artist|artists)$/.test(x));
+  if(ti>=0&&ai>=0)return rows.slice(1).map(r=>((r[ti]||"").trim()+" - "+((r[ai]||"").split(/[;,]/)[0]||"").trim()).trim()).filter(x=>x!=="-");
+  return String(t).split(/\r?\n/).filter(x=>x.trim()).map(l=>l.replace(/^\d+[.)]\s*/,"").trim());
 }
 async function resolve(lines,prog){
   let n=0;
@@ -645,7 +684,7 @@ $("impgo").onclick=async()=>{
     else if(sp){
       let r;try{r=await spotifyList(sp[1],sp[2])}catch(e){return P("Spotify would not share this playlist. Export it as CSV at exportify.net (or tunemymusic.com) and upload the file here, or paste the song names.")}
       name=name||r.name;tracks=await resolve(r.lines.slice(0,100),P);
-    }else{name=name||"Imported songs";tracks=await resolve(parseLines(raw).slice(0,100),P)}
+    }else{name=name||"Imported songs";const parsed=parseLines(raw);if(parsed.length>100)P("Found "+parsed.length+" rows. Importing first 100 (limit)…");tracks=await resolve(parsed.slice(0,100),P)}
   }catch(e){return P("Could not read this playlist. It must be Public or Unlisted (not Private). Check your internet and try again, or paste the song names instead.")}
   if(!tracks.length)return P("The playlist loaded but no songs could be read. Make sure it is Public or Unlisted, then try again.");
   pls.push({id:"pl_"+Date.now(),name,tracks});save();
@@ -669,7 +708,7 @@ function mergeCloud(d){
     });
     const out=Object.values(map);
     out.sort((a,b)=>(a.id==="liked"?0:1)-(b.id==="liked"?0:1));
-    if(!out.length||out[0].id!=="liked")out.unshift({id:"liked",name:"Liked songs",tracks:[]});
+    if(!out.some(p=>p.id==="liked"))out.unshift({id:"liked",name:"Liked songs",tracks:[]});out.sort((a,b)=>(a.id==="liked"?0:1)-(b.id==="liked"?0:1));
     pls=out;
     const seen={};hist=[...hist,...ch].filter(t=>t&&!seen[t.id]&&(seen[t.id]=1)).slice(0,100);
   }catch(e){}
@@ -703,12 +742,23 @@ function openAccount(){
 let LOCKED=false,wl=null,holdT=null;
 async function wake(){try{if(navigator.wakeLock&&!wl){wl=await navigator.wakeLock.request("screen");wl.addEventListener("release",()=>{wl=null})}}catch(e){}}
 function unwake(){try{if(wl)wl.release()}catch(e){}wl=null}
-function lockTouch(){$("lk-s").textContent=cur?cur.title+" - "+cur.artist:"";$("lock").classList.add("on");LOCKED=true;wake()}
-function unlockTouch(){$("lock").classList.remove("on");LOCKED=false;unwake()}
+const lockables=()=>[...document.body.children].filter(e=>e.id!=="lock"&&e.tagName!=="SCRIPT"&&e.tagName!=="AUDIO");
+function lockTouch(){
+  $("lk-s").textContent=cur?cur.title+" - "+cur.artist:"";
+  $("lock").classList.add("on");LOCKED=true;document.body.classList.add("locked");
+  lockables().forEach(e=>{e.inert=true});wake();
+  try{const d=document.documentElement;if(d.requestFullscreen&&!document.fullscreenElement)d.requestFullscreen({navigationUI:"hide"}).catch(()=>{})}catch(e){}
+}
+function unlockTouch(){
+  $("lock").classList.remove("on");LOCKED=false;document.body.classList.remove("locked");
+  lockables().forEach(e=>{e.inert=false});unwake();
+  try{if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})}catch(e){}
+}
 const ulb=$("ul");ulb.innerHTML=I.lock+"<i></i>";
 ulb.addEventListener("pointerdown",e=>{e.preventDefault();ulb.classList.add("hold");holdT=setTimeout(()=>{ulb.classList.remove("hold");unlockTouch()},900)});
 ["pointerup","pointercancel","pointerleave"].forEach(ev=>ulb.addEventListener(ev,()=>{clearTimeout(holdT);ulb.classList.remove("hold")}));
 $("lock").addEventListener("touchmove",e=>e.preventDefault(),{passive:false});
+$("lock").addEventListener("contextmenu",e=>e.preventDefault());
 document.addEventListener("visibilitychange",()=>{if(LOCKED&&document.visibilityState==="visible")wake()});
 $("flock").onclick=lockTouch;
 
@@ -835,15 +885,15 @@ function tint(url){
 
 /* ---------- player (Audius audio + YouTube player) ---------- */
 const au=$("au");
-let Q=[],qi=-1,cur=null,shuf=false,rep=false,yt=null,ytReady=false,pend=null,fails=0,seeking=false;
+let Q=[],qi=-1,cur=null,shuf=false,rep=0,yt=null,ytReady=false,pend=null,fails=0,seeking=false,shuffleBag=[],playHistory=[];
 function onYouTubeIframeAPIReady(){
   yt=new YT.Player("yt",{width:"100%",height:"100%",playerVars:{playsinline:1,controls:0,disablekb:1,rel:0,modestbranding:1},events:{
     onReady:()=>{ytReady=true;if(pend){yt.loadVideoById(pend);pend=null}},
-    onStateChange:e=>{if(e.data===0)ended();if(e.data===1)fails=0;if(e.data===1||e.data===2)setPlay(e.data===1)},
+    onStateChange:e=>{if(e.data===0)ended();if(e.data===1)fails=0;if(e.data===1||e.data===2||e.data===3)setPlay(e.data===1)},
     onError:()=>fail()
   }});
 }
-function playList(l,i){Q=l.slice();qi=i;go()}
+function playList(l,i){Q=l.slice();qi=i;shuffleBag=[];playHistory=[];go()}
 let THEME=LS("sr_theme")||"system";
 const mq=window.matchMedia?matchMedia("(prefers-color-scheme: light)"):null;
 function applyTheme(){const l=THEME==="light"||(THEME==="system"&&mq&&mq.matches);document.documentElement.dataset.theme=l?"light":"dark";const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=l?"#f6f5fb":"#09090c"}
@@ -853,27 +903,48 @@ let MODE=LS("sr_mode")||"disc";
 function applyMode(c){c=c||cur;$("stage").classList.toggle("vid",MODE==="video"&&!!c&&c.src==="y");$("vmode").textContent=MODE==="video"?"Video":"Disc"}
 function setMode(m){MODE=m;LS("sr_mode",m);applyMode();toast(m==="video"?"Video mode: shows the video":"Disc mode: spinning disc, less data")}
 const RES={};
+const BADV=/\b(cover|remix|karaoke|instrumental|slowed|reverb|sped ?up|nightcore|8d|reaction|tutorial|mashup|live)\b/;
+function scoreMatch(r,t){
+  const tt=norm2(cleanT(t.title)),ta=norm2(cleanT(t.artist)),rt=norm2(r.title),rc=norm2(r.artist);
+  const tw=tt.split(" ").filter(w=>w.length>1),aw=ta.split(" ").filter(w=>w.length>2);
+  const frac=tw.length?tw.filter(w=>rt.includes(w)).length/tw.length:1;
+  let sc=frac*6;
+  if(frac<0.5)sc-=6;
+  sc+=aw.length?aw.filter(w=>rt.includes(w)||rc.includes(w)).length/aw.length*4:0;
+  if(BADV.test(rt)&&!BADV.test(tt))sc-=4;
+  if(t.dur&&r.dur)sc-=Math.min(6,Math.abs(t.dur-r.dur)/12);
+  return sc;
+}
 async function resolveLazy(t){
   if(RES[t.id])return RES[t.id];
-  let r=null;
-  try{r=(await ytSearch(t.q))[0]}catch(e){}
-  if(!r&&t.pv)return RES[t.id]={id:t.id,src:"p",title:t.title,artist:t.artist,art:t.art,dur:30,url:t.pv};
-  if(!r)try{const a=await api("/tracks/search?query="+enc(t.q)+"&limit=1");if(a[0])r=norm(a[0])}catch(e){}
-  if(!r)return null;
-  return RES[t.id]=Object.assign({},r,{id:t.id,title:t.title,artist:t.artist,art:t.art||r.art,dur:t.dur||r.dur});
+  const keep=r=>RES[t.id]=Object.assign({},r,{id:t.id,title:t.title,artist:t.artist,art:t.art||r.art,dur:t.dur||r.dur});
+  let all=[];try{all=await ytSearchAll(t.q,1200)}catch(e){}
+  let best=null,bs=-99;
+  all.forEach(r=>{const x=scoreMatch(r,t);if(x>bs){bs=x;best=r}});
+  if(best&&bs>=3)return keep(best);
+  if(t.pv)return RES[t.id]={id:t.id,src:"p",title:t.title,artist:t.artist,art:t.art,dur:30,url:t.pv};
+  try{const a=await api("/tracks/search?query="+enc(t.q)+"&limit=3");
+    let ab=null,as=-99;a.map(norm).forEach(r=>{const x=scoreMatch(r,t);if(x>as){as=x;ab=r}});
+    if(ab&&as>=3)return keep(ab)}catch(e){}
+  if(best&&bs>=1)return keep(best);
+  return null;
 }
 function startTrack(c){
   if(c.src==="y"){au.pause();applyMode(c);if(ytReady)yt.loadVideoById(c.vid);else pend=c.vid}
   else if(c.src==="p"){if(ytReady)yt.stopVideo();pend=null;applyMode(c);au.src=c.url;au.play().catch(()=>{})}
   else{if(ytReady)yt.stopVideo();pend=null;applyMode(c);au.src=(host||FALLBACK)+"/v1/tracks/"+c.aid+"/stream?app_name="+APP;au.play().catch(()=>{})}
 }
+let playTok=0;
+function stopAll(){try{au.pause()}catch(e){}try{if(ytReady&&yt.pauseVideo)yt.pauseVideo()}catch(e){}pend=null}
 async function go(){
   const t=Q[qi];if(!t)return;
+  const my=++playTok;
+  stopAll();
   cur=t;ui();addHist(t);
   if(t.src==="l"){
     toast("Finding song…");
     const r=await resolveLazy(t);
-    if(cur!==t)return;
+    if(my!==playTok)return;
     if(!r){fail();return}
     cur=r;
   }
@@ -883,11 +954,11 @@ function ui(){
   $("m-title").textContent=$("ft").textContent=cur.title;
   $("m-artist").textContent=$("fa").textContent=cur.artist;
   $("m-art").src=$("fart").src=cur.art||"";
-  updLike();setPlay(true);tint(cur.art);if(lyOn)loadLyrics(cur);if(LOCKED)$("lk-s").textContent=cur.title+" - "+cur.artist;
+  updLike();setPlay(false);tint(cur.art);if(lyOn)loadLyrics(cur);if(LOCKED)$("lk-s").textContent=cur.title+" - "+cur.artist;
   document.querySelectorAll("[data-id]").forEach(r=>r.classList.toggle("now",r.dataset.id===cur.id));
   if("mediaSession" in navigator){
     navigator.mediaSession.metadata=new MediaMetadata({title:cur.title,artist:cur.artist,artwork:cur.art?[{src:cur.art}]:[]});
-    const M=navigator.mediaSession;M.setActionHandler("nexttrack",next);M.setActionHandler("previoustrack",prev);M.setActionHandler("play",toggle);M.setActionHandler("pause",toggle);
+    const M=navigator.mediaSession;[["nexttrack",next],["previoustrack",prev],["play",()=>{if(cur&&cur.src==="y")yt.playVideo();else au.play().catch(()=>toast("Tap Play to start audio"))}],["pause",()=>{if(cur&&cur.src==="y")yt.pauseVideo();else au.pause()}],["seekbackward",d=>seekBy(-(d&&d.seekOffset||10))],["seekforward",d=>seekBy(d&&d.seekOffset||10)],["stop",()=>{if(cur&&cur.src==="y")yt.pauseVideo();else au.pause();setPlay(false)}]].forEach(([a,h])=>{try{M.setActionHandler(a,h)}catch(e){}});
   }
 }
 function setPlay(p){document.body.classList.toggle("playing",p);$("mplay").innerHTML=$("fplay").innerHTML=p?I.pause:I.play;if("mediaSession" in navigator)navigator.mediaSession.playbackState=p?"playing":"paused"}
@@ -897,20 +968,26 @@ function toggle(){
   if(cur.src==="y"){if(!ytReady)return;isPlaying()?yt.pauseVideo():yt.playVideo()}
   else au.paused?au.play():au.pause();
 }
-function next(){if(!Q.length)return;qi=shuf&&Q.length>1?Math.floor(Math.random()*Q.length):(qi+1)%Q.length;go()}
+function next(){if(!Q.length)return;const previous=qi;if(shuf&&Q.length>1){if(!shuffleBag.length)shuffleBag=shuffled(Q.map((_,i)=>i).filter(i=>i!==qi));qi=shuffleBag.pop();}else qi=(qi+1)%Q.length;if(cur)playHistory.push(previous);go()}
 function prev(){
-  if(!Q.length)return;
+  if(!Q.length||!cur)return;
   const t=cur.src==="y"&&ytReady?yt.getCurrentTime():au.currentTime;
   if(t>3){cur.src==="y"?yt.seekTo(0,true):au.currentTime=0;return}
-  qi=(qi-1+Q.length)%Q.length;go();
+  const old=playHistory.pop();if(Number.isInteger(old))qi=old;else qi=(qi-1+Q.length)%Q.length;go();
 }
-function ended(){if(rep){cur.src==="y"?yt.seekTo(0,true):(au.currentTime=0,au.play());if(cur.src==="y")yt.playVideo();return}next()}
-function fail(){fails++;if(fails>3){toast("Playback keeps failing. Check your internet.");return}toast("Can't play this one, skipping");next()}
-au.onplay=()=>setPlay(true);au.onpause=()=>setPlay(false);au.onended=ended;au.onerror=()=>cur&&(cur.src==="a"||cur.src==="p")&&fail();au.onplaying=()=>fails=0;
+function seekBy(delta){if(!cur)return;let t=cur.src==="y"&&ytReady?yt.getCurrentTime():au.currentTime;let d=cur.src==="y"&&ytReady?yt.getDuration():au.duration;if(!d)return;let to=Math.max(0,Math.min(d,t+delta));if(cur.src==="y"&&ytReady)yt.seekTo(to,true);else au.currentTime=to;}
+function ended(){
+  if(!cur)return;
+  if(rep===2){cur.src==="y"?yt.seekTo(0,true):(au.currentTime=0,au.play());if(cur.src==="y")yt.playVideo();return}
+  if(rep===0&&!shuf&&qi===Q.length-1){setPlay(false);return}
+  next();
+}
+function fail(){fails++;if(fails>3){toast("Playback keeps failing. Try another source or check internet.");setPlay(false);return}toast("Can't play this one; trying next track");if(Q.length>1)next();else setPlay(false)}
+au.onplay=()=>setPlay(true);au.onpause=()=>setPlay(false);au.onended=ended;au.onerror=()=>cur&&(cur.src==="a"||cur.src==="p")&&fail();au.onplaying=()=>{fails=0;setPlay(true)};
 $("mplay").onclick=$("fplay").onclick=toggle;
 $("mnext").onclick=$("fnext").onclick=next;$("fprev").onclick=prev;
 $("fshuf").onclick=()=>{shuf=!shuf;$("fshuf").classList.toggle("on",shuf)};
-$("frep").onclick=()=>{rep=!rep;$("frep").classList.toggle("on",rep)};
+$("frep").onclick=()=>{rep=(rep+1)%3;$("frep").classList.toggle("on",rep!==0);$("frep").title=["Repeat off","Repeat all","Repeat one"][rep];toast(["Repeat off","Repeat all","Repeat one"][rep])};
 $("m-open").onclick=$("m-art").onclick=()=>{$("full").classList.add("open");startViz()};
 $("fclose").onclick=()=>{$("full").classList.remove("open");stopViz()};
 const fbar=$("fbar");fbar.oninput=()=>fbar.style.setProperty("--p",fbar.value+"%");
@@ -926,17 +1003,17 @@ setInterval(()=>{
   if(cur.src==="y"){if(!ytReady||!yt.getCurrentTime)return;t=yt.getCurrentTime();d=yt.getDuration()}
   else{t=au.currentTime;d=au.duration||cur.dur}
   d=d||0;const p=d?t/d*100:0;
-  $("tc").textContent=fmt(t);$("td").textContent=fmt(d);$("mbar").style.width=p+"%";
+  $("tc").textContent=fmt(t);$("td").textContent=fmt(d);$("mbar").style.width=p+"%";try{if(navigator.mediaSession&&d>0&&navigator.mediaSession.setPositionState)navigator.mediaSession.setPositionState({duration:d,playbackRate:1,position:Math.max(0,Math.min(d,t))})}catch(e){}
   if(!seeking){fbar.value=p;fbar.style.setProperty("--p",p+"%")}
   if(lyOn&&LY.length){
     let k=-1;for(let i=0;i<LY.length;i++){if(LY[i].t<=t)k=i;else break}
     if(k!==lyIdx){lyIdx=k;const L=$("lyrics"),ps=L.children;[...ps].forEach((e,i)=>e.classList.toggle("on",i===k));if(ps[k])L.scrollTo({top:ps[k].offsetTop-L.clientHeight/2+16,behavior:"smooth"})}
   }
 },500);
-function updLike(){const l=cur&&pls[0].tracks.some(t=>t.id===cur.id);$("flike").classList.toggle("liked",!!l)}
+function updLike(){const l=cur&&likedPL().tracks.some(t=>t.id===cur.id);$("flike").classList.toggle("liked",!!l)}
 $("flike").onclick=()=>{
   if(!cur)return toast("Play a song first");
-  const t=pls[0].tracks,i=t.findIndex(x=>x.id===cur.id);i<0?t.push(cur):t.splice(i,1);save();updLike();
+  const t=likedPL().tracks,i=t.findIndex(x=>x.id===cur.id);i<0?t.push(cur):t.splice(i,1);save();updLike();
 };
 $("fadd").onclick=()=>pick(cur);
 setPlay(false);loadHome();
@@ -944,7 +1021,8 @@ $("acc").onclick=$("avatar").onclick=openAccount;$("lyr").onclick=toggleLyrics;$
 $("lyrics").classList.toggle("noen",!EN);$("len").textContent="English: "+(EN?"on":"off");applyMode();applyTheme();updAccount();
 if(FIRST)setTimeout(()=>{if(!fbUser&&window.FB)openAccount()},2500);
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
-if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").then(reg=>{if(reg.waiting)toast("UTA update ready. Close and reopen to update.");reg.addEventListener("updatefound",()=>{const w=reg.installing;if(w)w.addEventListener("statechange",()=>{if(w.state==="installed"&&navigator.serviceWorker.controller)toast("UTA updated. Reload when convenient.")})})}).catch(()=>toast("Offline support could not start"));
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&navigator.serviceWorker)navigator.serviceWorker.getRegistration().then(r=>r&&r.update().catch(()=>{}))});
 </script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="module">
